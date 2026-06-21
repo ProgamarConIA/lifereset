@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import { Plus, Trash2, Search, FileText } from 'lucide-react'
 import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 
 interface NotesClientProps {
   initialNotes: Note[]
@@ -33,16 +34,16 @@ export function NotesClient({ initialNotes, userId }: NotesClientProps) {
   const createNote = async () => {
     const { data, error } = await supabase
       .from('notes')
-      .insert({ user_id: userId, title: 'Untitled note', content: '' })
+      .insert({ user_id: userId, title: 'Nota sin título', content: '' })
       .select()
       .single()
 
     if (!error && data) {
       setNotes((prev) => [data, ...prev])
       setSelectedNote(data)
-      toast.success('Note created')
+      toast.success('Nota creada')
     } else {
-      toast.error('Failed to create note')
+      toast.error('Error al crear la nota')
     }
   }
 
@@ -54,9 +55,9 @@ export function NotesClient({ initialNotes, userId }: NotesClientProps) {
       if (selectedNote?.id === id) {
         setSelectedNote(remaining[0] ?? null)
       }
-      toast.success('Note deleted')
+      toast.success('Nota eliminada')
     } else {
-      toast.error('Failed to delete note')
+      toast.error('Error al eliminar la nota')
     }
   }
 
@@ -106,7 +107,7 @@ export function NotesClient({ initialNotes, userId }: NotesClientProps) {
             <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
             <Input
               className="pl-8 h-8 text-sm"
-              placeholder="Search notes..."
+              placeholder="Buscar notas..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -120,7 +121,7 @@ export function NotesClient({ initialNotes, userId }: NotesClientProps) {
           {filteredNotes.length === 0 ? (
             <div className="text-center py-8">
               <FileText className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-              <p className="text-xs text-muted-foreground">No notes yet</p>
+              <p className="text-xs text-muted-foreground">Aún no hay notas</p>
             </div>
           ) : (
             filteredNotes.map((note) => (
@@ -133,12 +134,12 @@ export function NotesClient({ initialNotes, userId }: NotesClientProps) {
                     : 'hover:bg-muted border border-transparent'
                 }`}
               >
-                <p className="font-medium text-sm truncate">{note.title || 'Untitled note'}</p>
+                <p className="font-medium text-sm truncate">{note.title || 'Nota sin título'}</p>
                 <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
-                  {note.content || 'Empty note'}
+                  {note.content || 'Nota vacía'}
                 </p>
                 <p className="text-[10px] text-muted-foreground mt-1">
-                  {format(new Date(note.updated_at), 'MMM d, yyyy')}
+                  {format(new Date(note.updated_at), "d MMM yyyy", { locale: es })}
                 </p>
               </button>
             ))
@@ -152,7 +153,7 @@ export function NotesClient({ initialNotes, userId }: NotesClientProps) {
           <>
             <div className="flex items-center justify-between px-4 py-2 border-b">
               <span className="text-xs text-muted-foreground">
-                {saving ? 'Saving...' : `Last saved ${format(new Date(selectedNote.updated_at), 'h:mm a')}`}
+                {saving ? 'Guardando...' : `Guardado el ${format(new Date(selectedNote.updated_at), 'HH:mm')}`}
               </span>
               <Button
                 size="sm"
@@ -161,19 +162,19 @@ export function NotesClient({ initialNotes, userId }: NotesClientProps) {
                 onClick={() => deleteNote(selectedNote.id)}
               >
                 <Trash2 className="h-4 w-4 mr-1" />
-                Delete
+                Eliminar
               </Button>
             </div>
             <CardContent className="flex-1 flex flex-col p-4 gap-3 overflow-hidden">
               <Input
                 className="text-xl font-bold border-none shadow-none px-0 h-auto focus-visible:ring-0 bg-transparent"
-                placeholder="Note title..."
+                placeholder="Título de la nota..."
                 value={selectedNote.title ?? ''}
                 onChange={handleTitleChange}
               />
               <Textarea
                 className="flex-1 resize-none border-none shadow-none px-0 focus-visible:ring-0 text-sm bg-transparent"
-                placeholder="Start writing..."
+                placeholder="Comienza a escribir..."
                 value={selectedNote.content ?? ''}
                 onChange={handleContentChange}
               />
@@ -182,10 +183,10 @@ export function NotesClient({ initialNotes, userId }: NotesClientProps) {
         ) : (
           <CardContent className="flex-1 flex flex-col items-center justify-center gap-4">
             <FileText className="h-12 w-12 text-muted-foreground" />
-            <p className="text-muted-foreground text-sm">Select a note or create a new one</p>
+            <p className="text-muted-foreground text-sm">Selecciona una nota o crea una nueva</p>
             <Button onClick={createNote}>
               <Plus className="h-4 w-4 mr-2" />
-              New Note
+              Nueva nota
             </Button>
           </CardContent>
         )}

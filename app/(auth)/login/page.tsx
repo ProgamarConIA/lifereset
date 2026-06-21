@@ -42,18 +42,18 @@ export default function LoginPage() {
             <Zap className="h-6 w-6" />
           </div>
           <h1 className="text-3xl font-bold">Life Reset</h1>
-          <p className="text-muted-foreground">Your personal productivity hub</p>
+          <p className="text-muted-foreground">Tu centro de productividad personal</p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Welcome back</CardTitle>
-            <CardDescription>Sign in to your account</CardDescription>
+            <CardTitle>Bienvenido de nuevo</CardTitle>
+            <CardDescription>Inicia sesión en tu cuenta</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Correo electrónico</Label>
                 <Input
                   id="email"
                   type="email"
@@ -64,7 +64,7 @@ export default function LoginPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Contraseña</Label>
                 <Input
                   id="password"
                   type="password"
@@ -78,10 +78,10 @@ export default function LoginPage() {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
+                    Iniciando sesión...
                   </>
                 ) : (
-                  'Sign in'
+                  'Iniciar sesión'
                 )}
               </Button>
             </form>
@@ -89,9 +89,9 @@ export default function LoginPage() {
         </Card>
 
         <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{' '}
+          ¿No tienes una cuenta?{' '}
           <Link href="/register" className="text-primary hover:underline font-medium">
-            Create one
+            Créala aquí
           </Link>
         </p>
       </div>

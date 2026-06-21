@@ -29,6 +29,7 @@ import {
   startOfWeek,
   endOfWeek,
 } from 'date-fns'
+import { es } from 'date-fns/locale'
 import { Plus, ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react'
 
 interface CalendarClientProps {
@@ -106,10 +107,10 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
         .single()
 
       if (error) {
-        toast.error('Failed to update event')
+        toast.error('Error al actualizar el evento')
       } else {
         setEvents((prev) => prev.map((ev) => (ev.id === editingEvent.id ? data : ev)))
-        toast.success('Event updated')
+        toast.success('Evento actualizado')
         setDialogOpen(false)
       }
     } else {
@@ -120,10 +121,10 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
         .single()
 
       if (error) {
-        toast.error('Failed to create event')
+        toast.error('Error al crear el evento')
       } else {
         setEvents((prev) => [...prev, data])
-        toast.success('Event created')
+        toast.success('Evento creado')
         setDialogOpen(false)
       }
     }
@@ -135,21 +136,21 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
     const { error } = await supabase.from('events').delete().eq('id', id)
     if (!error) {
       setEvents((prev) => prev.filter((e) => e.id !== id))
-      toast.success('Event deleted')
+      toast.success('Evento eliminado')
     } else {
-      toast.error('Failed to delete event')
+      toast.error('Error al eliminar el evento')
     }
   }
 
-  const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  const weekDays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
 
   return (
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Calendar</h2>
+        <h2 className="text-2xl font-bold">Calendario</h2>
         <Button onClick={() => openCreate()} size="sm">
           <Plus className="h-4 w-4 mr-2" />
-          New Event
+          Nuevo evento
         </Button>
       </div>
 
@@ -160,7 +161,7 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
             <Button variant="ghost" size="icon" onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <h3 className="font-semibold text-lg">{format(currentMonth, 'MMMM yyyy')}</h3>
+            <h3 className="font-semibold text-lg">{format(currentMonth, 'MMMM yyyy', { locale: es })}</h3>
             <Button variant="ghost" size="icon" onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -227,14 +228,14 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
       {selectedDate && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold">{format(selectedDate, 'EEEE, MMMM d')}</h3>
+            <h3 className="font-semibold">{format(selectedDate, "EEEE, d 'de' MMMM", { locale: es })}</h3>
             <Button size="sm" variant="outline" onClick={() => openCreate(selectedDate)}>
               <Plus className="h-4 w-4 mr-2" />
-              Add event
+              Agregar evento
             </Button>
           </div>
           {selectedDayEvents.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No events on this day.</p>
+            <p className="text-sm text-muted-foreground">No hay eventos en este día.</p>
           ) : (
             <div className="space-y-2">
               {selectedDayEvents.map((event) => (
@@ -248,8 +249,8 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
                           <p className="text-xs text-muted-foreground mt-0.5">{event.description}</p>
                         )}
                         <p className="text-xs text-muted-foreground mt-1">
-                          {format(new Date(event.start_date), 'h:mm a')}
-                          {event.end_date && ` – ${format(new Date(event.end_date), 'h:mm a')}`}
+                          {format(new Date(event.start_date), 'HH:mm')}
+                          {event.end_date && ` – ${format(new Date(event.end_date), 'HH:mm')}`}
                         </p>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
@@ -277,14 +278,14 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editingEvent ? 'Edit Event' : 'New Event'}</DialogTitle>
+            <DialogTitle>{editingEvent ? 'Editar evento' : 'Nuevo evento'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="event-title">Title</Label>
+              <Label htmlFor="event-title">Título</Label>
               <Input
                 id="event-title"
-                placeholder="Event title..."
+                placeholder="Título del evento..."
                 value={form.title}
                 onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
                 required
@@ -292,10 +293,10 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="event-description">Description (optional)</Label>
+              <Label htmlFor="event-description">Descripción (opcional)</Label>
               <Textarea
                 id="event-description"
-                placeholder="Event details..."
+                placeholder="Detalles del evento..."
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                 rows={2}
@@ -303,7 +304,7 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="start_date">Start date & time</Label>
+              <Label htmlFor="start_date">Fecha y hora de inicio</Label>
               <Input
                 id="start_date"
                 type="datetime-local"
@@ -314,7 +315,7 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="end_date">End date & time (optional)</Label>
+              <Label htmlFor="end_date">Fecha y hora de fin (opcional)</Label>
               <Input
                 id="end_date"
                 type="datetime-local"
@@ -339,10 +340,10 @@ export function CalendarClient({ initialEvents, userId }: CalendarClientProps) {
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                Cancel
+                Cancelar
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? 'Saving...' : editingEvent ? 'Save changes' : 'Create event'}
+                {loading ? 'Guardando...' : editingEvent ? 'Guardar cambios' : 'Crear evento'}
               </Button>
             </DialogFooter>
           </form>

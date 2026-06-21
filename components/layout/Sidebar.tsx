@@ -20,13 +20,13 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/tasks', label: 'Tasks', icon: CheckSquare },
-  { href: '/habits', label: 'Habits', icon: Target },
-  { href: '/calendar', label: 'Calendar', icon: CalendarDays },
-  { href: '/notes', label: 'Notes', icon: FileText },
-  { href: '/stats', label: 'Statistics', icon: BarChart3 },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard', label: 'Inicio', icon: LayoutDashboard },
+  { href: '/tasks', label: 'Tareas', icon: CheckSquare },
+  { href: '/habits', label: 'Hábitos', icon: Target },
+  { href: '/calendar', label: 'Calendario', icon: CalendarDays },
+  { href: '/notes', label: 'Notas', icon: FileText },
+  { href: '/stats', label: 'Estadísticas', icon: BarChart3 },
+  { href: '/settings', label: 'Configuración', icon: Settings },
 ]
 
 export function Sidebar() {
@@ -36,7 +36,7 @@ export function Sidebar() {
   const handleSignOut = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
-    toast.success('Signed out successfully')
+    toast.success('Sesión cerrada correctamente')
     router.push('/login')
     router.refresh()
   }
@@ -79,7 +79,7 @@ export function Sidebar() {
           onClick={handleSignOut}
         >
           <LogOut className="h-4 w-4" />
-          Sign out
+          Cerrar sesión
         </Button>
       </div>
     </aside>

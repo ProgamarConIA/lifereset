@@ -25,6 +25,7 @@ import {
   eachDayOfInterval,
   parseISO,
 } from 'date-fns'
+import { es } from 'date-fns/locale'
 import { Flame, CheckSquare, Target, TrendingUp } from 'lucide-react'
 
 interface StatsClientProps {
@@ -72,7 +73,7 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
     const completed = dayTasks.filter((t) => t.completed).length
     const total = dayTasks.length
     return {
-      date: format(day, 'MMM d'),
+      date: format(day, 'd MMM', { locale: es }),
       completed,
       total,
       pending: total - completed,
@@ -85,11 +86,18 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
     const completedCount = habitLogs.filter((l) => l.completed_date === dayStr).length
     const percentage = habits.length > 0 ? Math.round((completedCount / habits.length) * 100) : 0
     return {
-      date: format(day, 'MMM d'),
+      date: format(day, 'd MMM', { locale: es }),
       completed: completedCount,
       percentage,
     }
   })
+
+  const categoryTranslations: Record<string, string> = {
+    gym: 'Gimnasio',
+    study: 'Estudio',
+    work: 'Trabajo',
+    personal: 'Personal',
+  }
 
   // Category breakdown
   const categoryCount: Record<string, number> = {}
@@ -97,7 +105,7 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
     categoryCount[t.category] = (categoryCount[t.category] ?? 0) + 1
   })
   const categoryData = Object.entries(categoryCount).map(([name, value]) => ({
-    name: name.charAt(0).toUpperCase() + name.slice(1),
+    name: categoryTranslations[name] ?? (name.charAt(0).toUpperCase() + name.slice(1)),
     value,
   }))
 
@@ -107,9 +115,9 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
     priorityCount[t.priority] = (priorityCount[t.priority] ?? 0) + 1
   })
   const priorityData = [
-    { name: 'High', value: priorityCount.high, color: '#ef4444' },
-    { name: 'Medium', value: priorityCount.medium, color: '#f59e0b' },
-    { name: 'Low', value: priorityCount.low, color: '#22c55e' },
+    { name: 'Alta', value: priorityCount.high, color: '#ef4444' },
+    { name: 'Media', value: priorityCount.medium, color: '#f59e0b' },
+    { name: 'Baja', value: priorityCount.low, color: '#22c55e' },
   ]
 
   const totalTasks = tasks.length
@@ -128,12 +136,12 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
   return (
     <div className="space-y-6 max-w-5xl">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Statistics</h2>
+        <h2 className="text-2xl font-bold">Estadísticas</h2>
         <Tabs value={period} onValueChange={(v) => setPeriod(v as typeof period)}>
           <TabsList>
-            <TabsTrigger value="7">7 days</TabsTrigger>
-            <TabsTrigger value="14">14 days</TabsTrigger>
-            <TabsTrigger value="30">30 days</TabsTrigger>
+            <TabsTrigger value="7">7 días</TabsTrigger>
+            <TabsTrigger value="14">14 días</TabsTrigger>
+            <TabsTrigger value="30">30 días</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
@@ -148,7 +156,7 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold">{taskCompletionRate}%</p>
-                <p className="text-xs text-muted-foreground">Task completion</p>
+                <p className="text-xs text-muted-foreground">Cumplimiento de tareas</p>
               </div>
             </div>
           </CardContent>
@@ -162,7 +170,7 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold">{habitRate}%</p>
-                <p className="text-xs text-muted-foreground">Habit consistency</p>
+                <p className="text-xs text-muted-foreground">Consistencia de hábitos</p>
               </div>
             </div>
           </CardContent>
@@ -176,7 +184,7 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold">{bestStreak}</p>
-                <p className="text-xs text-muted-foreground">Best streak</p>
+                <p className="text-xs text-muted-foreground">Mejor racha</p>
               </div>
             </div>
           </CardContent>
@@ -190,7 +198,7 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold">{completedTasks}</p>
-                <p className="text-xs text-muted-foreground">Tasks done</p>
+                <p className="text-xs text-muted-foreground">Tareas completadas</p>
               </div>
             </div>
           </CardContent>
@@ -200,7 +208,7 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
       {/* Task completion chart */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Task Activity</CardTitle>
+          <CardTitle className="text-base">Actividad de tareas</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={220}>
@@ -212,8 +220,8 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
                 contentStyle={{ fontSize: 12, borderRadius: 8 }}
                 cursor={{ fill: 'hsl(var(--muted))' }}
               />
-              <Bar dataKey="completed" name="Completed" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="pending" name="Pending" fill="hsl(var(--muted-foreground))" radius={[4, 4, 0, 0]} opacity={0.4} />
+              <Bar dataKey="completed" name="Completadas" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="pending" name="Pendientes" fill="hsl(var(--muted-foreground))" radius={[4, 4, 0, 0]} opacity={0.4} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
@@ -222,7 +230,7 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
       {/* Habit completion chart */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Habit Completion Rate (%)</CardTitle>
+          <CardTitle className="text-base">Tasa de cumplimiento de hábitos (%)</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={220}>
@@ -232,7 +240,7 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
               <YAxis tick={{ fontSize: 11 }} domain={[0, 100]} unit="%" />
               <Tooltip
                 contentStyle={{ fontSize: 12, borderRadius: 8 }}
-                formatter={(value) => [`${value}%`, 'Completion']}
+                formatter={(value) => [`${value}%`, 'Cumplimiento']}
               />
               <Line
                 type="monotone"
@@ -251,11 +259,11 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
         {/* Category breakdown */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Tasks by Category</CardTitle>
+            <CardTitle className="text-base">Tareas por categoría</CardTitle>
           </CardHeader>
           <CardContent>
             {categoryData.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No data yet</p>
+              <p className="text-sm text-muted-foreground text-center py-8">Aún no hay datos</p>
             ) : (
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
@@ -283,11 +291,11 @@ export function StatsClient({ tasks, habits, habitLogs }: StatsClientProps) {
         {/* Habits streaks */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Habit Streaks</CardTitle>
+            <CardTitle className="text-base">Rachas de hábitos</CardTitle>
           </CardHeader>
           <CardContent>
             {habits.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No habits yet</p>
+              <p className="text-sm text-muted-foreground text-center py-8">Aún no hay hábitos</p>
             ) : (
               <div className="space-y-3">
                 {habits.map((habit) => {

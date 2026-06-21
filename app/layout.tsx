@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Life Reset',
-  description: 'Personal productivity app for tracking tasks, habits, and goals',
+  description: 'App de productividad personal para seguimiento de tareas, hábitos y metas',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning>
       <head>
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <meta name="mobile-web-app-capable" content="yes" />

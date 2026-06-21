@@ -14,13 +14,13 @@ import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 
 const pageTitles: Record<string, string> = {
-  '/dashboard': 'Dashboard',
-  '/tasks': 'Tasks',
-  '/habits': 'Habits',
-  '/calendar': 'Calendar',
-  '/notes': 'Notes',
-  '/stats': 'Statistics',
-  '/settings': 'Settings',
+  '/dashboard': 'Inicio',
+  '/tasks': 'Tareas',
+  '/habits': 'Hábitos',
+  '/calendar': 'Calendario',
+  '/notes': 'Notas',
+  '/stats': 'Estadísticas',
+  '/settings': 'Configuración',
 }
 
 interface HeaderProps {
@@ -40,7 +40,7 @@ export function Header({ userName, userEmail }: HeaderProps) {
   const handleSignOut = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
-    toast.success('Signed out successfully')
+    toast.success('Sesión cerrada correctamente')
     router.push('/login')
     router.refresh()
   }
@@ -63,7 +63,7 @@ export function Header({ userName, userEmail }: HeaderProps) {
         <DropdownMenu>
           <DropdownMenuTrigger
             className="relative h-8 w-8 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label="User menu"
+            aria-label="Menú de usuario"
           >
             <Avatar className="h-8 w-8">
               <AvatarFallback className="bg-primary text-primary-foreground text-xs">
@@ -73,18 +73,18 @@ export function Header({ userName, userEmail }: HeaderProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
             <div className="px-2 py-1.5">
-              <p className="text-sm font-medium">{userName ?? 'User'}</p>
+              <p className="text-sm font-medium">{userName ?? 'Usuario'}</p>
               <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSettings} className="cursor-pointer">
               <Settings className="mr-2 h-4 w-4" />
-              Settings
+              Configuración
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut} variant="destructive" className="cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" />
-              Sign out
+              Cerrar sesión
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

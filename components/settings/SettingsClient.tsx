@@ -34,61 +34,61 @@ export function SettingsClient({ userId, initialFullName, initialEmail }: Settin
       .eq('id', userId)
 
     if (error) {
-      toast.error('Failed to save profile')
+      toast.error('Error al guardar el perfil')
     } else {
-      toast.success('Profile saved')
+      toast.success('Perfil guardado')
     }
     setSaving(false)
   }
 
   const themeOptions = [
-    { value: 'light', label: 'Light', icon: Sun },
-    { value: 'dark', label: 'Dark', icon: Moon },
-    { value: 'system', label: 'System', icon: Monitor },
+    { value: 'light', label: 'Claro', icon: Sun },
+    { value: 'dark', label: 'Oscuro', icon: Moon },
+    { value: 'system', label: 'Sistema', icon: Monitor },
   ]
 
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h2 className="text-2xl font-bold">Settings</h2>
-        <p className="text-muted-foreground text-sm mt-1">Manage your account and preferences</p>
+        <h2 className="text-2xl font-bold">Configuración</h2>
+        <p className="text-muted-foreground text-sm mt-1">Administra tu cuenta y preferencias</p>
       </div>
 
       {/* Profile settings */}
       <Card>
         <CardHeader>
-          <CardTitle>Profile</CardTitle>
-          <CardDescription>Update your personal information</CardDescription>
+          <CardTitle>Perfil</CardTitle>
+          <CardDescription>Actualiza tu información personal</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSaveProfile} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName">Nombre completo</Label>
               <Input
                 id="fullName"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Your full name"
+                placeholder="Tu nombre completo"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Correo electrónico</Label>
               <Input
                 id="email"
                 value={initialEmail}
                 disabled
                 className="opacity-60"
               />
-              <p className="text-xs text-muted-foreground">Email cannot be changed here</p>
+              <p className="text-xs text-muted-foreground">El correo electrónico no se puede cambiar aquí</p>
             </div>
             <Button type="submit" disabled={saving}>
               {saving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
+                  Guardando...
                 </>
               ) : (
-                'Save changes'
+                'Guardar cambios'
               )}
             </Button>
           </form>
@@ -100,8 +100,8 @@ export function SettingsClient({ userId, initialFullName, initialEmail }: Settin
       {/* Theme settings */}
       <Card>
         <CardHeader>
-          <CardTitle>Appearance</CardTitle>
-          <CardDescription>Choose your preferred theme</CardDescription>
+          <CardTitle>Apariencia</CardTitle>
+          <CardDescription>Elige tu tema preferido</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex gap-3">
@@ -130,28 +130,28 @@ export function SettingsClient({ userId, initialFullName, initialEmail }: Settin
       {/* Notifications placeholder */}
       <Card>
         <CardHeader>
-          <CardTitle>Notifications</CardTitle>
-          <CardDescription>Control how you receive notifications</CardDescription>
+          <CardTitle>Notificaciones</CardTitle>
+          <CardDescription>Controla cómo recibes las notificaciones</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium">Daily reminders</p>
-              <p className="text-xs text-muted-foreground">Get reminded to check your habits each day</p>
+              <p className="text-sm font-medium">Recordatorios diarios</p>
+              <p className="text-xs text-muted-foreground">Recibe un recordatorio para revisar tus hábitos cada día</p>
             </div>
             <Switch defaultChecked />
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium">Task due date alerts</p>
-              <p className="text-xs text-muted-foreground">Get notified when tasks are due</p>
+              <p className="text-sm font-medium">Alertas de vencimiento de tareas</p>
+              <p className="text-xs text-muted-foreground">Recibe notificaciones cuando las tareas están por vencer</p>
             </div>
             <Switch defaultChecked />
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium">Weekly summary</p>
-              <p className="text-xs text-muted-foreground">Receive a weekly productivity report</p>
+              <p className="text-sm font-medium">Resumen semanal</p>
+              <p className="text-xs text-muted-foreground">Recibe un informe semanal de productividad</p>
             </div>
             <Switch />
           </div>
@@ -163,15 +163,15 @@ export function SettingsClient({ userId, initialFullName, initialEmail }: Settin
       {/* About */}
       <Card>
         <CardHeader>
-          <CardTitle>About</CardTitle>
+          <CardTitle>Acerca de</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">App version</span>
+            <span className="text-muted-foreground">Versión de la app</span>
             <span>1.0.0</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Built with</span>
+            <span className="text-muted-foreground">Desarrollado con</span>
             <span>Next.js · Supabase · shadcn/ui</span>
           </div>
         </CardContent>

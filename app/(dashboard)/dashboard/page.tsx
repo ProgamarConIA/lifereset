@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { format, startOfWeek, endOfWeek, isToday } from 'date-fns'
+import { es } from 'date-fns/locale'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -79,14 +80,27 @@ export default async function DashboardPage() {
     personal: '👤',
   }
 
+  const categoryLabels: Record<string, string> = {
+    gym: 'Gimnasio',
+    study: 'Estudio',
+    work: 'Trabajo',
+    personal: 'Personal',
+  }
+
+  const priorityLabels: Record<string, string> = {
+    high: 'Alta',
+    medium: 'Media',
+    low: 'Baja',
+  }
+
   return (
     <div className="space-y-6 max-w-5xl">
       <div>
         <h2 className="text-2xl font-bold">
-          Good {today.getHours() < 12 ? 'morning' : today.getHours() < 18 ? 'afternoon' : 'evening'}! 👋
+          ¡{today.getHours() < 12 ? 'Buenos días' : today.getHours() < 18 ? 'Buenas tardes' : 'Buenas noches'}! 👋
         </h2>
         <p className="text-muted-foreground mt-1">
-          {format(today, 'EEEE, MMMM d, yyyy')}
+          {format(today, "EEEE, d 'de' MMMM 'de' yyyy", { locale: es })}
         </p>
       </div>
 
@@ -99,7 +113,7 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{pendingTasks.length}</p>
-                <p className="text-xs text-muted-foreground">Pending tasks</p>
+                <p className="text-xs text-muted-foreground">Tareas pendientes</p>
               </div>
             </div>
           </CardContent>
@@ -113,7 +127,7 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{habitsCompletedToday}/{habitsTotal}</p>
-                <p className="text-xs text-muted-foreground">Habits today</p>
+                <p className="text-xs text-muted-foreground">Hábitos hoy</p>
               </div>
             </div>
           </CardContent>
@@ -127,7 +141,7 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{upcomingEvents.length}</p>
-                <p className="text-xs text-muted-foreground">Upcoming</p>
+                <p className="text-xs text-muted-foreground">Próximos</p>
               </div>
             </div>
           </CardContent>
@@ -141,7 +155,7 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{weeklyCompleted}/{weeklyTotal}</p>
-                <p className="text-xs text-muted-foreground">Week tasks</p>
+                <p className="text-xs text-muted-foreground">Tareas de la semana</p>
               </div>
             </div>
           </CardContent>
@@ -151,12 +165,12 @@ export default async function DashboardPage() {
       {habits.length > 0 && (
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="text-base">Today&apos;s Habits</CardTitle>
-            <Link href="/habits" className="text-sm text-muted-foreground hover:text-foreground transition-colors">View all</Link>
+            <CardTitle className="text-base">Hábitos de hoy</CardTitle>
+            <Link href="/habits" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Ver todos</Link>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">{habitsCompletedToday} of {habitsTotal} completed</span>
+              <span className="text-muted-foreground">{habitsCompletedToday} de {habitsTotal} completados</span>
               <span className="font-medium">{habitPercentage}%</span>
             </div>
             <Progress value={habitPercentage} className="h-2" />
@@ -184,13 +198,13 @@ export default async function DashboardPage() {
       <div className="grid md:grid-cols-2 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="text-base">Pending Tasks</CardTitle>
-            <Link href="/tasks" className="text-sm text-muted-foreground hover:text-foreground transition-colors">View all</Link>
+            <CardTitle className="text-base">Tareas pendientes</CardTitle>
+            <Link href="/tasks" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Ver todas</Link>
           </CardHeader>
           <CardContent>
             {pendingTasks.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
-                No pending tasks. Great job! 🎉
+                Sin tareas pendientes. ¡Buen trabajo! 🎉
               </p>
             ) : (
               <ul className="space-y-2">
@@ -200,10 +214,10 @@ export default async function DashboardPage() {
                       <p className="text-sm font-medium truncate">{task.title}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <Badge variant={priorityColors[task.priority] as 'destructive' | 'default' | 'secondary'} className="text-[10px] h-4">
-                          {task.priority}
+                          {priorityLabels[task.priority] ?? task.priority}
                         </Badge>
                         <span className="text-xs text-muted-foreground">
-                          {categoryEmojis[task.category]} {task.category}
+                          {categoryEmojis[task.category]} {categoryLabels[task.category] ?? task.category}
                         </span>
                       </div>
                     </div>
@@ -211,7 +225,7 @@ export default async function DashboardPage() {
                       <span className={`text-xs shrink-0 ${
                         isToday(new Date(task.due_date)) ? 'text-destructive font-medium' : 'text-muted-foreground'
                       }`}>
-                        {format(new Date(task.due_date + 'T00:00:00'), 'MMM d')}
+                        {format(new Date(task.due_date + 'T00:00:00'), 'd MMM', { locale: es })}
                       </span>
                     )}
                   </li>
@@ -223,13 +237,13 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="text-base">Upcoming Events</CardTitle>
-            <Link href="/calendar" className="text-sm text-muted-foreground hover:text-foreground transition-colors">View all</Link>
+            <CardTitle className="text-base">Próximos eventos</CardTitle>
+            <Link href="/calendar" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Ver todos</Link>
           </CardHeader>
           <CardContent>
             {upcomingEvents.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
-                No upcoming events scheduled.
+                No hay eventos próximos programados.
               </p>
             ) : (
               <ul className="space-y-2">
@@ -242,7 +256,7 @@ export default async function DashboardPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{event.title}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {format(new Date(event.start_date), 'MMM d, h:mm a')}
+                        {format(new Date(event.start_date), "d MMM, HH:mm", { locale: es })}
                       </p>
                     </div>
                   </li>

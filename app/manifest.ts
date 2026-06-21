@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Life Reset',
     short_name: 'Life Reset',
-    description: 'Personal productivity app for life reset',
+    description: 'App de productividad personal para reiniciar tu vida',
     start_url: '/',
     display: 'standalone',
     background_color: '#0f0f1a',

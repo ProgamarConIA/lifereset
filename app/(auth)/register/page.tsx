@@ -37,7 +37,7 @@ export default function RegisterPage() {
       return
     }
 
-    toast.success('Account created! Check your email to confirm.')
+    toast.success('¡Cuenta creada! Revisa tu correo electrónico para confirmarla.')
     router.push('/login')
   }
 
@@ -49,29 +49,29 @@ export default function RegisterPage() {
             <Zap className="h-6 w-6" />
           </div>
           <h1 className="text-3xl font-bold">Life Reset</h1>
-          <p className="text-muted-foreground">Start your journey today</p>
+          <p className="text-muted-foreground">Comienza tu camino hoy</p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Create an account</CardTitle>
-            <CardDescription>Begin your productivity journey</CardDescription>
+            <CardTitle>Crear una cuenta</CardTitle>
+            <CardDescription>Comienza tu camino hacia la productividad</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleRegister} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="fullName">Nombre completo</Label>
                 <Input
                   id="fullName"
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="Juan García"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Correo electrónico</Label>
                 <Input
                   id="email"
                   type="email"
@@ -82,7 +82,7 @@ export default function RegisterPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Contraseña</Label>
                 <Input
                   id="password"
                   type="password"
@@ -97,10 +97,10 @@ export default function RegisterPage() {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating account...
+                    Creando cuenta...
                   </>
                 ) : (
-                  'Create account'
+                  'Crear cuenta'
                 )}
               </Button>
             </form>
@@ -108,9 +108,9 @@ export default function RegisterPage() {
         </Card>
 
         <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
+          ¿Ya tienes una cuenta?{' '}
           <Link href="/login" className="text-primary hover:underline font-medium">
-            Sign in
+            Iniciar sesión
           </Link>
         </p>
       </div>

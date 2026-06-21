@@ -13,11 +13,11 @@ import {
 } from 'lucide-react'
 
 const navItems = [
-  { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
-  { href: '/tasks', label: 'Tasks', icon: CheckSquare },
-  { href: '/habits', label: 'Habits', icon: Target },
-  { href: '/calendar', label: 'Calendar', icon: CalendarDays },
-  { href: '/notes', label: 'Notes', icon: FileText },
+  { href: '/dashboard', label: 'Inicio', icon: LayoutDashboard },
+  { href: '/tasks', label: 'Tareas', icon: CheckSquare },
+  { href: '/habits', label: 'Hábitos', icon: Target },
+  { href: '/calendar', label: 'Calendario', icon: CalendarDays },
+  { href: '/notes', label: 'Notas', icon: FileText },
   { href: '/stats', label: 'Stats', icon: BarChart3 },
 ]
 

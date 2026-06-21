@@ -19,6 +19,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import { Plus, Trash2, Pencil, Flame, CheckCircle2, Circle } from 'lucide-react'
 import { format, subDays, eachDayOfInterval, parseISO } from 'date-fns'
+import { es } from 'date-fns/locale'
 
 interface HabitsClientProps {
   initialHabits: Habit[]
@@ -81,7 +82,7 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
       const { error } = await supabase.from('habit_logs').delete().eq('id', log.id)
       if (!error) {
         setLogs((prev) => prev.filter((l) => l.id !== log.id))
-        toast.success('Habit unchecked')
+        toast.success('Hábito desmarcado')
       }
     } else {
       // Add log
@@ -93,7 +94,7 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
 
       if (!error && data) {
         setLogs((prev) => [...prev, data])
-        toast.success(`${habit.icon} ${habit.name} done! Keep it up!`)
+        toast.success(`${habit.icon} ${habit.name} ¡listo! ¡Sigue así!`)
       }
     }
   }
@@ -129,10 +130,10 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
         .single()
 
       if (error) {
-        toast.error('Failed to update habit')
+        toast.error('Error al actualizar el hábito')
       } else {
         setHabits((prev) => prev.map((h) => (h.id === editingHabit.id ? data : h)))
-        toast.success('Habit updated')
+        toast.success('Hábito actualizado')
         setDialogOpen(false)
       }
     } else {
@@ -143,10 +144,10 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
         .single()
 
       if (error) {
-        toast.error('Failed to create habit')
+        toast.error('Error al crear el hábito')
       } else {
         setHabits((prev) => [data, ...prev])
-        toast.success('Habit created!')
+        toast.success('¡Hábito creado!')
         setDialogOpen(false)
       }
     }
@@ -159,9 +160,9 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
     if (!error) {
       setHabits((prev) => prev.filter((h) => h.id !== id))
       setLogs((prev) => prev.filter((l) => l.habit_id !== id))
-      toast.success('Habit deleted')
+      toast.success('Hábito eliminado')
     } else {
-      toast.error('Failed to delete habit')
+      toast.error('Error al eliminar el hábito')
     }
   }
 
@@ -177,14 +178,14 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Habits</h2>
+          <h2 className="text-2xl font-bold">Hábitos</h2>
           <p className="text-muted-foreground text-sm mt-1">
-            {completedToday} of {habits.length} completed today
+            {completedToday} de {habits.length} completados hoy
           </p>
         </div>
         <Button onClick={openCreate} size="sm">
           <Plus className="h-4 w-4 mr-2" />
-          New Habit
+          Nuevo hábito
         </Button>
       </div>
 
@@ -192,7 +193,7 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Today&apos;s Progress</span>
+              <span className="text-sm font-medium">Progreso de hoy</span>
               <span className="text-sm font-bold text-primary">{percentage}%</span>
             </div>
             <Progress value={percentage} className="h-2" />
@@ -203,10 +204,10 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
       {habits.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground">No habits yet.</p>
+            <p className="text-muted-foreground">Aún no hay hábitos.</p>
             <Button onClick={openCreate} variant="outline" className="mt-4">
               <Plus className="h-4 w-4 mr-2" />
-              Create your first habit
+              Crea tu primer hábito
             </Button>
           </CardContent>
         </Card>
@@ -260,7 +261,7 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
                                   : 'bg-muted text-muted-foreground'
                               }`}
                               style={completed ? { backgroundColor: habit.color } : {}}
-                              title={format(day, 'MMM d')}
+                              title={format(day, 'd MMM', { locale: es })}
                             >
                               {format(day, 'd')}
                             </div>
@@ -301,11 +302,11 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editingHabit ? 'Edit Habit' : 'New Habit'}</DialogTitle>
+            <DialogTitle>{editingHabit ? 'Editar hábito' : 'Nuevo hábito'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label>Icon</Label>
+              <Label>Ícono</Label>
               <div className="flex flex-wrap gap-2">
                 {icons.map((icon) => (
                   <button
@@ -323,10 +324,10 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Nombre</Label>
               <Input
                 id="name"
-                placeholder="e.g. Morning workout"
+                placeholder="ej. Ejercicio matutino"
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 required
@@ -334,10 +335,10 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description (optional)</Label>
+              <Label htmlFor="description">Descripción (opcional)</Label>
               <Textarea
                 id="description"
-                placeholder="What does this habit involve?"
+                placeholder="¿En qué consiste este hábito?"
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                 rows={2}
@@ -360,10 +361,10 @@ export function HabitsClient({ initialHabits, initialLogs, userId }: HabitsClien
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                Cancel
+                Cancelar
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? 'Saving...' : editingHabit ? 'Save changes' : 'Create habit'}
+                {loading ? 'Guardando...' : editingHabit ? 'Guardar cambios' : 'Crear hábito'}
               </Button>
             </DialogFooter>
           </form>
